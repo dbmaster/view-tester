@@ -1,0 +1,10 @@
+<tools>
+    <tool id="db-view-tester" title="Database::View Tester" projectTypes="inventory">
+        <description>Runs a select query from all views in a database</description>
+        <parameters>
+            <parameter name="p_database" title="Database"   type="string" 
+                       required="true" suggestion="project_databases" width="300" />
+        </parameters>
+        <output  script="db_view_tester.groovy" type="html" />
+    </tool>
+</tools>
