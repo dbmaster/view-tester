@@ -8,7 +8,7 @@
     <name>View Tester</name>
     <description>Run a select from all views in a database</description>
 
-    <version>1.0.8</version>
+    <version>1.0.9</version>
     <packaging>bundle</packaging>
 
     <parent>
