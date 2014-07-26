@@ -1,7 +1,3 @@
-/*
- *  File Version:  $Id: db_test_views.groovy 145 2013-05-22 18:10:44Z schristin $
- */
-
 import groovy.sql.Sql
 import com.branegy.dbmaster.model.*
 import com.branegy.service.connection.api.ConnectionService
