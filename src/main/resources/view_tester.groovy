@@ -2,7 +2,7 @@ import groovy.sql.Sql
 import com.branegy.dbmaster.model.*
 import com.branegy.service.connection.api.ConnectionService
 import com.branegy.dbmaster.connection.ConnectionProvider
-import com.branegy.dbmaster.connection.JDBCDialect
+import com.branegy.dbmaster.connection.JdbcDialect
 
 def test_server    = p_database.split("\\.")[0]
 def test_database  = p_database.split("\\.")[1]
@@ -11,22 +11,31 @@ connectionSrv = dbm.getService(ConnectionService.class)
 
 RevEngineeringOptions options = new RevEngineeringOptions()
 options.database = test_database
-options.importViews = true
-options.importTables = false
+options.rawConfig =
+//"+Table:*\n"+
+"+View:*";
+//"+Function:*\n"+
+//"+Procedure:*\n"+
+//"+Index:*\n"+
+//"+Constraint:*\n"+
+//"+Trigger:*\n"+
+//"+ForeignKey:*\n"+
+//"+SecurityObject:*\n"+
+//"+Column:*\n"+
+//"+Parameter:*\n"+
+//"+ExtendedProperty:*"
 
 connectionInfo = connectionSrv.findByName(test_server)
-connector = ConnectionProvider.getConnector(connectionInfo)
 
 logger.info("Connecting to server ${test_server}")
-
-dialect = connector.connect()
+dialect = ConnectionProvider.get().getDialect(connectionInfo)
+dbm.closeResourceOnExit(dialect)
 
 logger.info("Loading list of views from database ${test_database}")
 
 model = dialect.getModel(test_server, options)
 
-connection = connector.getJdbcConnection(test_database)
-dbm.closeResourceOnExit(connection)
+connection = dialect.getConnection()
 
 def sql = new Sql(connection)
 
@@ -83,7 +92,6 @@ model.views.each { view ->
    }
 }
 
-connection.close()
 println "</table>"
 
 println "<br/>Test completed. Total views tested ${model.views.size()}. Errors found - ${errors}"
@@ -91,7 +99,7 @@ println "<br/>Test completed. Total views tested ${model.views.size()}. Errors f
 logger.info("Test completed")
 
 
-def generateSql(View view, JDBCDialect dialect) {
+def generateSql(View view, JdbcDialect dialect) {
    def viewName = view.name
    def max_rows = 1
 
